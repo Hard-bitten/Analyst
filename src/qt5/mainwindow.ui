@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>620</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>620</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Anayst</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>240</y>
+      <width>601</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTextBrowser" name="log"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>601</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>GroupBox</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>620</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="input_sin"/>
+    <addaction name="input_dir"/>
+    <addaction name="output"/>
+    <addaction name="exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>基础数据</string>
+    </property>
+    <addaction name="server_param"/>
+    <addaction name="player_param"/>
+    <addaction name="rate_inf"/>
+    <addaction name="tec_data"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>数据分析</string>
+    </property>
+    <addaction name="formation"/>
+    <addaction name="keypoint"/>
+    <addaction name="forward"/>
+    <addaction name="back"/>
+    <addaction name="action_13"/>
+    <addaction name="view"/>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>结果输出</string>
+    </property>
+    <addaction name="output_graph"/>
+   </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="about"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_4"/>
+   <addaction name="menu_5"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="input_sin">
+   <property name="text">
+    <string>单个导入</string>
+   </property>
+   <property name="toolTip">
+    <string>单个导入</string>
+   </property>
+  </action>
+  <action name="input_dir">
+   <property name="text">
+    <string>批量导入</string>
+   </property>
+  </action>
+  <action name="output">
+   <property name="text">
+    <string>结果导出</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="server_param">
+   <property name="text">
+    <string>服务器参数</string>
+   </property>
+  </action>
+  <action name="player_param">
+   <property name="text">
+    <string>球员参数</string>
+   </property>
+  </action>
+  <action name="rate_inf">
+   <property name="text">
+    <string>胜率信息</string>
+   </property>
+  </action>
+  <action name="tec_data">
+   <property name="text">
+    <string>单球员技能数据</string>
+   </property>
+  </action>
+  <action name="formation">
+   <property name="text">
+    <string>阵型分析</string>
+   </property>
+  </action>
+  <action name="keypoint">
+   <property name="text">
+    <string>关键点分析</string>
+   </property>
+  </action>
+  <action name="forward">
+   <property name="text">
+    <string>前锋特征提取</string>
+   </property>
+  </action>
+  <action name="back">
+   <property name="text">
+    <string>后卫特征提取</string>
+   </property>
+  </action>
+  <action name="action_13">
+   <property name="text">
+    <string>守门员特征提取</string>
+   </property>
+  </action>
+  <action name="view">
+   <property name="text">
+    <string>可视化显示</string>
+   </property>
+  </action>
+  <action name="output_graph">
+   <property name="text">
+    <string>统计图输出</string>
+   </property>
+  </action>
+  <action name="about">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
