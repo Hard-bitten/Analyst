@@ -72,6 +72,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     tec_data.h \
-    log.h
+    log.h \
+    basedata.h
 
 FORMS    += mainwindow.ui

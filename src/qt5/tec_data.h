@@ -1,8 +1,9 @@
 #ifndef TEC_DATA_H
 #define TEC_DATA_H
 #include <map>
+#include "basedata.h"
 
-class Tec_Single_Data{
+class Tec_Single_Data:public BaseData{
 private:
     int M_Goal=0;//进球数
     int M_Shoots=0;//射门数
@@ -37,7 +38,7 @@ public:
     }
     Tec_Single_Data();
 };
-class Tec_Data
+class Tec_Data:public BaseData
 {
 private:
     std::map<int,Tec_Single_Data> LTeam;
@@ -55,37 +56,30 @@ public:
     std::map<int,Tec_Single_Data> & Tec_RTeam (){
         return RTeam;
     }
-    void setPT(char T,int t){
-        if(T=='L')
-            M_L_Possession_Time=t;
-        if(T=='R')
-            M_R_Possession_Time=t;
-    }
-    void setShoots(char T,int t){
-        if(T=='L')
-            M_L_Shoots=t;
-        if(T=='R')
-            M_R_Shoots=t;
-    }
-    int PT(char T){
+
+    void calcPT();
+    int PT(char T)
+    {
         if(T=='L')
             return M_L_Possession_Time;
         else
-        if(T=='R')
-            return M_R_Possession_Time;
-        else
-            return 0;
+            if(T=='R')
+                return M_R_Possession_Time;
+            else
+                return 0;
     }
+
+    void calcShoots();
     int Shoots(char T){
         if(T=='L')
             return M_L_Shoots;
         else
-        if(T=='R')
-            return M_R_Shoots;
-        else
-            return 0;
+            if(T=='R')
+                return M_R_Shoots;
+            else
+                return 0;
     }
-    Tec_Data();
+
 };
 
 #endif // TEC_DATA_H
