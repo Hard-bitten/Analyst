@@ -67,12 +67,13 @@ QMAKE_CXXFLAGS += -static
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    tec_data.cpp \
-    log.cpp
+    logger.cpp \
+    process.cpp
 
 HEADERS  += mainwindow.h \
     tec_data.h \
-    log.h \
-    basedata.h
+    basedata.h \
+    logger.h \
+    process.h
 
 FORMS    += mainwindow.ui

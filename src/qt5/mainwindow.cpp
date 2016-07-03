@@ -1,10 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "logger.h"
+#include <QLabel>
+#include <QMenu>
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QListWidgetItem>
 #include <QString>
+#include <QDir>
 #include <cmath>
 
 //UNIT TEST
@@ -12,12 +17,27 @@ void MainWindow::test(){
 
 }
 
+//LogCatcher
+void logCatcher(QtMsgType type,const QMessageLogContext& Context,const QString &msg)
+{
+    if(type == QtDebugMsg || type == QtWarningMsg)
+        //将日志信息传递给logger处理函数
+        logger::instance()->loggerMaster(msg);
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //------------------------------------日志处理
+    //注册日志处理函数
+    qInstallMessageHandler(logCatcher);
+    //连接日志，接收从logger实例中返回的日志信息
+    connect(logger::instance(),SIGNAL(G_sndMsg(QString)),SLOT(S_disLog(QString)));
+    qDebug()<<"欢迎使用Analyst 1.0                                  by kaixuan！";
 }
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -25,10 +45,18 @@ MainWindow::~MainWindow()
 
 //Single file open
 bool MainWindow::open_single(){
-    workfile=QFileDialog::getOpenFileName();
+    QString filter;
+    filter = "RCG file (*.rcg *.rcg.gz)";
+    QDir dir;
+    workfile=QFileDialog::getOpenFileName(NULL,QString("选取单个文件"), dir.absolutePath() , filter );
     if(!workfile.isEmpty())
     {
-        openRCG(workfile);
+        //        openRCG(workfile);
+        QListWidgetItem *temp=new QListWidgetItem(workfile);
+        ui->tasklist->addItem(temp);
+        temp->setCheckState(Qt::Checked);
+        qDebug()<<"成功导入1个RCG文件!";
+        //        Pro.run(M_tec_Data);
         return true;
     }
     else
@@ -37,70 +65,98 @@ bool MainWindow::open_single(){
 
 //Directory open
 bool MainWindow::open_dir(){
+
     workfile=QFileDialog::getExistingDirectory();
+
     if(!workfile.isEmpty())
     {
+        QDir *dir=new QDir(workfile);
+        QStringList filter;
+        filter<<"*.rcg"<<"*.rcg.gz";
+        dir->setNameFilters(filter);
+        QList<QFileInfo> *fileInfo=new QList<QFileInfo>(dir->entryInfoList(filter));
+
+        int n=fileInfo->count();
+        for(int i=0;i<n;i++){
+            QListWidgetItem *temp=new QListWidgetItem(workfile+"/"+fileInfo->at(i).fileName());
+            ui->tasklist->addItem(temp);
+            temp->setCheckState(Qt::Checked);
+        }
+        qDebug()<<"成功导入"<<n<<"个文件";
         return true;
     }
     else
         return false;
 }
 
-/*-------------------------------------------------------------------*/
-/*!
-
-*/
-void
-MainWindow::openRCG( const QString & file_path )
-{
-    if ( ! QFile::exists( file_path ) )
-    {
-        std::cerr << "File [" << file_path.toStdString()
-                  << "] does not exist."
-                  << std::endl;
-        return;
-    }
-
-
-    if ( ! M_main_data.openRCG( file_path.toStdString() ) )
-    {
-        QString err_msg = tr( "Failed to read [" );
-        err_msg += file_path;
-        err_msg += tr( "]" );
-        QMessageBox::critical( this,
-                               tr( "Error" ),
-                               err_msg,
-                               QMessageBox::Ok, QMessageBox::NoButton );
-        this->setWindowTitle( tr( PACKAGE_NAME ) );
-        return;
-    }
-    else
-    {
-
-    }
-
-    if ( M_main_data.viewHolder().monitorViewCont().empty() )
-    {
-        QString err_msg = tr( "Empty log file [" );
-        err_msg += file_path;
-        err_msg += tr( "]" );
-        QMessageBox::critical( this,
-                               tr( "Error" ),
-                               err_msg,
-                               QMessageBox::Ok, QMessageBox::NoButton );
-        this->setWindowTitle( tr( PACKAGE_NAME ) );
-        return;
-    }
-}
-
-
-
+//clicked on open_single
 void MainWindow::on_input_sin_triggered()
 {
     open_single();
 }
 
+//clicked on open_dir
 void MainWindow::on_input_dir_triggered()
 {
     open_dir();
+}
+
+//go to tab
+void MainWindow::on_server_param_triggered()
+{
+    QString name=("服务器参数");
+    QLabel *lable = new QLabel("server param!");
+    new_tab(name,lable);
+}
+
+//creat a new tab
+void MainWindow::new_tab(QString &text,QWidget *W){
+    QTabWidget *form=ui->workform;
+    int count = form->count();
+    for(int i=0;i<count;i++){
+        if(form->tabText(i)==text)
+        {
+            form->setCurrentIndex(i);
+            return;//go to tab
+        }
+    }
+    int new_index=form->addTab(W,text);
+    form->setCurrentIndex(new_index);
+}
+
+//
+void MainWindow::on_workform_tabBarDoubleClicked(int index)
+{
+    QTabWidget *form=ui->workform;
+    if(form->tabText(index)=="主页")
+    {
+        return;
+    }
+    else
+        form->currentWidget()->deleteLater();
+}
+
+void MainWindow::on_run_clicked()
+{
+    QString temp;
+    for(int i=0;i<ui->tasklist->count();i++){
+        temp=ui->tasklist->item(i)->text();
+//        qDebug()<<temp;
+        Pro.run(temp);
+    }
+}
+
+//将日志信息追加到QPlainTextEdit控件中
+void MainWindow::S_disLog(const QString & msg)
+{
+    ui->plainTextEdit->appendPlainText(msg);
+}
+
+
+
+void MainWindow::on_player_param_triggered()
+{
+    QString name=("球员参数");
+    QLabel *lable = new QLabel("球员参数!");
+    new_tab(name,lable);
 }

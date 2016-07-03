@@ -1,7 +1,54 @@
-#include "tec_data.h"
+#include "process.h"
+#include <QFile>
+#include <QFileInfo>
+#include <QMessageBox>
+#include <QString>
+#include <QObject>
+process::process()
+{
+
+}
+
+//初始化静态变量
+process * process::_instance = 0;
+
+//构建单实例日志对象
+process * process::instance()
+{
+    if(!process::_instance)
+        process::_instance = new process;
+    return process::_instance;
+}
+
+bool process::openRCG( const QString & file_path )
+{
+
+    if ( ! QFile::exists( file_path ) )
+    {
+        qWarning()<<file_path<<" 打开失败！";
+        return false;
+    }
 
 
-void Tec_Data::calcPT()
+    if ( ! M_main_data.openRCG( file_path.toStdString() ) )
+    {
+        qWarning()<<file_path<<" 读取失败！";
+        return false;
+    }
+    else
+    {
+        QFileInfo file(file_path);
+        qDebug()<<"成功打开文件"<<file.fileName();
+    }
+    if ( M_main_data.viewHolder().monitorViewCont().empty() )
+    {
+        qWarning()<<file_path<<" 空的RCG文件！";
+        return false;
+    }
+    return true;
+}
+
+void process::calcPT()
 {
     std::vector< Player >  player;
     char state=' ';
@@ -53,18 +100,18 @@ void Tec_Data::calcPT()
         temp=M_main_data.getCurrentViewData()->cycle();
         temp_S=state;
     }
-    M_L_Possession_Time=time_L;
-    M_R_Possession_Time=time_R;
-    std::cerr<<"L_Possession_Time:"<<PT('L')<<"  R_Possession_Time:"<<PT('R')<<std::endl;
+    qDebug()<<"L_Possession_Time:"<<time_L<<"  R_Possession_Time:"<<time_R;
+    //    M_tec_Data->setPT('L',time_L);
+    //    M_tec_Data->setPT('R',time_R);
+    //    std::cerr<<<<std::endl;
 }
 
-void Tec_Data::calcShoots()
+void process::calcShoots()
 {
     int L_Shoots=0;
     int R_Shoots=0;
 
     double xt,yt;
-    double ax,ay;
     double X;
     double Y;
     double X_v;
@@ -120,8 +167,35 @@ void Tec_Data::calcShoots()
             temp_t=t;
         }
     }
-    M_L_Shoots=L_Shoots;
-    M_R_Shoots=R_Shoots;
-    std::cerr<<"L_Shoots:"<<Shoots('L')<<"   R_Shoots:"<<Shoots('R')<<std::endl;
+    //    M_tec_Data->setShoots('L',L_Shoots);
+    //    M_tec_Data->setShoots('R',R_Shoots);
+    qDebug()<<"L_Shoots:"<<L_Shoots<<"   R_Shoots:"<<R_Shoots;
 }
 
+bool process::run(QString &Game){
+    qDebug()<<"--------------------------------------------------------------------------------------";
+    if(!openRCG(Game))
+        return false;
+    QString L_name,R_name;
+
+    L_name.fromStdString(M_main_data.getViewHolder().latestViewData()->leftTeam().name());
+    R_name.fromStdString(M_main_data.getViewHolder().latestViewData()->leftTeam().name());
+    qDebug()<<"队名："<<L_name<<"--"<<R_name;
+
+    int L_score,R_score;
+    if(M_main_data.getViewHolder().latestViewData()->cycle()>6000){
+        L_score=M_main_data.getViewHolder().latestViewData()->leftTeam().score();
+        R_score = M_main_data.getViewHolder().latestViewData()->rightTeam().score();
+        qDebug()<<"比分（有点球）:"<<L_score<<"--"<<R_score;
+    }
+    L_score= M_main_data.getViewHolder().getViewData(6000)->leftTeam().score();
+    R_score= M_main_data.getViewHolder().getViewData(6000)->rightTeam().score();
+    //    M_tec_Data->setGoal('L',L_score);
+    //    M_tec_Data->setGoal('R',R_score);
+    qDebug()<<"比分（无点球）:"<<L_score<<"--"<<R_score;
+    calcPT();
+    calcShoots();
+    qDebug()<<"--------------------------------------------------------------------------------------";
+    return true;
+
+}
