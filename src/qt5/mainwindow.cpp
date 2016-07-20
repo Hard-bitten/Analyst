@@ -38,7 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     qInstallMessageHandler(logCatcher);
     //连接日志，接收从logger实例中返回的日志信息
     connect(logger::instance(),SIGNAL(G_sndMsg(QString)),SLOT(S_disLog(QString)));
+    Opts=new QQueue<options>;
     qDebug()<<"欢迎使用Analyst 1.0                                  by kaixuan！";
+
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +60,7 @@ bool MainWindow::open_single(){
         QListWidgetItem *temp=new QListWidgetItem(workfile);
         ui->tasklist->addItem(temp);
         temp->setCheckState(Qt::Checked);
-
+        fileList<<workfile;
         qDebug()<<"成功导入1个RCG文件!";
         //        Pro.run(M_tec_Data);
         return true;
@@ -79,23 +81,15 @@ bool MainWindow::open_dir(){
         filter<<"*.rcg"<<"*.rcg.gz";
         dir->setNameFilters(filter);
         QList<QFileInfo> *fileInfo=new QList<QFileInfo>(dir->entryInfoList(filter));
-
         int n=fileInfo->count();
         for(int i=0;i<n;i++){
             QListWidgetItem *temp=new QListWidgetItem(workfile+"/"+fileInfo->at(i).fileName());
             ui->tasklist->addItem(temp);
             temp->setCheckState(Qt::Checked);
+            fileList<<(workfile+"/"+fileInfo->at(i).fileName());
         }
-
         qDebug()<<"成功导入"<<n<<"个文件";
-        NameDialog *dbname=new NameDialog;
-        dbname->exec();
-        QString name=dbname->getname();
-        name+=".db";
-        delete dbname;
-        qDebug()<<name;
-        db=new Rcsdb;
-        db->creatDB(name);
+        fillDBname();
         return true;
     }
     else
@@ -151,11 +145,15 @@ void MainWindow::on_workform_tabBarDoubleClicked(int index)
 
 void MainWindow::on_run_clicked()
 {
-    QString temp;
-    for(int i=0;i<ui->tasklist->count();i++){
-        temp=ui->tasklist->item(i)->text();
-        //        qDebug()<<temp;
-        //        Pro.run(temp);
+//    QString temp;
+    QList<QString>::iterator it=fileList.begin();
+    process *curPro;
+    for(;it!=fileList.end();it++){
+        for(QQueue<options>::iterator i=Opts->begin();i!=Opts->end();i++){
+            curPro=new process(*it,*i);
+            if(curPro->run())
+                qDebug()<<"为"<<*it<<"文件处理1条任务!";
+        }
     }
 }
 
@@ -174,9 +172,18 @@ void MainWindow::on_player_param_triggered()
 
 void MainWindow::on_pushButton_clicked()
 {
-    process newpro=new process;
-    SelectDialog *M_Select_Dialog=new SelectDialog(ui->objlist,pro);
+    SelectDialog *M_Select_Dialog=new SelectDialog(ui->objlist,Opts);
     M_Select_Dialog->show();
-    Pro->push_back(newpro);
+//    Pro->push_back(newpro);
 }
 
+void  MainWindow::fillDBname(){
+    NameDialog *dbname=new NameDialog;
+    dbname->exec();
+    QString name=dbname->getname();
+    name+=".db";
+    delete dbname;
+    qDebug()<<"成功创建"<<name;
+    db=new Rcsdb;
+    db->creatDB(name);
+}

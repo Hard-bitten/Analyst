@@ -8,12 +8,15 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QListWidget>
+#include <QQueue>
 #include "options.h"
+#include "process.h"
 class SelectDialog:public QDialog
 {
     Q_OBJECT
 
-    options * opt;
+    options opt;
+    QQueue<options> *opts;
     QComboBox * M_unum_start;
     QComboBox * M_unum_end;
 
@@ -66,7 +69,7 @@ private slots:
     QWidget * createPlayersDetailControls();
     QWidget * createteamDetailControls();
 public:
-    SelectDialog(QListWidget *List,QWidget *parent = 0 );
+    SelectDialog(QListWidget *List,QQueue<options> * _opts,QWidget *parent = 0 );
 
 signals:
     void configured();

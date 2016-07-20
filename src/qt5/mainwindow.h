@@ -28,6 +28,7 @@ private slots:
     void on_workform_tabBarDoubleClicked(int index);
 
     void on_run_clicked();
+
     void S_disLog(const QString & msg);
 
     void on_player_param_triggered();
@@ -36,13 +37,15 @@ private slots:
 
 private:
 //    process Pro;
-    QQueue<process> *Pro;
+    QQueue<options> *Opts;
+    QStringList fileList;
     QString workfile;
     Rcsdb *db;
 
     bool open_dir();
     bool open_single();
     void new_tab(QString &text,QWidget *W);
+    void fillDBname();
     void test();
     Ui::MainWindow *ui;
 };

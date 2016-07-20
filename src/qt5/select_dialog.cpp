@@ -6,10 +6,12 @@
 #include <QPushButton>
 #include <QList>
 
-SelectDialog::SelectDialog(QListWidget *List,QWidget *parent)
+SelectDialog::SelectDialog(QListWidget *List, QQueue<options> *_opts,QWidget *parent)
     : QDialog(parent)
 {
     list=List;
+    opts=_opts;
+//    qDebug()<<_opts->count();
     this->setWindowTitle( tr( "添加一个整理项目" ) );
     createWidgets();
 }
@@ -21,7 +23,7 @@ SelectDialog::SelectDialog(QListWidget *List,QWidget *parent)
 void
 SelectDialog::createWidgets()
 {
-    opt=new options;
+//    opt=new options;
     QVBoxLayout * top_layout = new QVBoxLayout();
     top_layout->setSizeConstraint( QLayout::SetFixedSize );
     commit=new QPushButton();
@@ -65,113 +67,107 @@ SelectDialog::createPlayersDetailControls()
 
         //
         M_pos_cb = new QCheckBox( tr( "位置" ) );
-        M_pos_cb->setChecked( opt->pos() );
+        M_pos_cb->setChecked( opt.pos() );
         connect( M_pos_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickpos(bool) ) );
         layout->addWidget( M_pos_cb);
         //
         M_ang_cb = new QCheckBox( tr( "角度" ) );
-        M_ang_cb->setChecked( opt->ang());
+        M_ang_cb->setChecked( opt.ang());
         connect( M_ang_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickang( bool ) ) );
         layout->addWidget( M_ang_cb );
         //
         M_MaxTurn_cb = new QCheckBox( tr( "最大转角" ) );
-        M_MaxTurn_cb->setChecked( opt->MaxTurn() );
+        M_MaxTurn_cb->setChecked( opt.MaxTurn() );
         connect( M_MaxTurn_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickMaxTurn( bool ) ) );
         layout->addWidget( M_MaxTurn_cb );
         //
         M_LastMove_cb = new QCheckBox( tr( "一周期位移" ) );
-        M_LastMove_cb->setChecked( opt->LastMove() );
+        M_LastMove_cb->setChecked( opt.LastMove() );
         connect( M_LastMove_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickLastMove (bool ) ) );
         layout->addWidget( M_LastMove_cb );
-        top_layout->addLayout( layout );
         //
         M_Body_cb = new QCheckBox( tr( "身体方向" ) );
-        M_Body_cb->setChecked( opt->LastMove() );
+        M_Body_cb->setChecked( opt.LastMove() );
         connect( M_Body_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickBody (bool ) ) );
         layout->addWidget( M_Body_cb );
+
         top_layout->addLayout( layout );
-        //
+
     }
+
     {
         QHBoxLayout * layout = new QHBoxLayout();
         layout->setMargin( 0 );
         layout->setSpacing( 0 );
 
-        M_head_cb = new QCheckBox( tr( "身体方向" ) );
-        M_head_cb->setChecked( opt->head() );
+        M_head_cb = new QCheckBox( tr( "头方向" ) );
+        M_head_cb->setChecked( opt.head() );
         connect( M_Body_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickhead (bool ) ) );
         layout->addWidget( M_head_cb );
-        top_layout->addLayout( layout );
         //
         M_tackle_cb = new QCheckBox( tr( "铲球概率" ) );
-        M_tackle_cb->setChecked( opt->tackle() );
+        M_tackle_cb->setChecked( opt.tackle() );
         connect( M_tackle_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clicktackle(bool)));
         layout->addWidget( M_tackle_cb );
-        top_layout->addLayout( layout );
         //
         M_Foul_cb = new QCheckBox( tr( "犯规概率" ) );
-        M_Foul_cb->setChecked( opt->Foul() );
+        M_Foul_cb->setChecked( opt.Foul() );
         connect( M_Foul_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickFoul(bool)));
         layout->addWidget( M_Foul_cb );
-        top_layout->addLayout( layout );
         //
         M_pointto_cb = new QCheckBox( tr( "指向位置" ) );
-        M_pointto_cb->setChecked( opt->pointto() );
+        M_pointto_cb->setChecked( opt.pointto() );
         connect( M_pointto_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickpointto(bool)));
         layout->addWidget( M_pointto_cb );
-        top_layout->addLayout( layout );
         //
         M_focus_cb = new QCheckBox( tr( "注意目标" ) );
-        M_focus_cb->setChecked( opt->focus() );
+        M_focus_cb->setChecked( opt.focus() );
         connect( M_focus_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickfocus(bool)));
         layout->addWidget( M_focus_cb );
         top_layout->addLayout( layout );
     }
+
     {
         QHBoxLayout * layout = new QHBoxLayout();
         layout->setMargin( 0 );
         layout->setSpacing( 0 );
         //
         M_stamina_cb = new QCheckBox( tr( "体能值&体能池" ) );
-        M_stamina_cb->setChecked( opt->stamina() );
+        M_stamina_cb->setChecked( opt.stamina() );
         connect( M_stamina_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickstamina(bool)));
         layout->addWidget( M_stamina_cb );
-        top_layout->addLayout( layout );
         //
         M_power_cb = new QCheckBox( tr( "力量" ) );
-        M_power_cb->setChecked( opt->power() );
+        M_power_cb->setChecked( opt.power() );
         connect( M_power_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickpower(bool)));
         layout->addWidget( M_power_cb );
-        top_layout->addLayout( layout );
         //
         M_Recovery_cb = new QCheckBox( tr( "体力恢复值" ) );
-        M_Recovery_cb->setChecked( opt->Recovery() );
+        M_Recovery_cb->setChecked( opt.Recovery() );
         connect( M_Recovery_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickRecovery(bool)));
         layout->addWidget( M_Recovery_cb );
-        top_layout->addLayout( layout );
         //
         M_card_Y_cb = new QCheckBox( tr( "黄牌" ) );
-        M_card_Y_cb->setChecked( opt->card_Y() );
+        M_card_Y_cb->setChecked( opt.card_Y() );
         connect( M_card_Y_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickcard_Y(bool)));
         layout->addWidget( M_card_Y_cb );
-        top_layout->addLayout( layout );
         //
         M_card_R_cb = new QCheckBox( tr( "红牌" ) );
-        M_card_R_cb->setChecked( opt->card_R() );
+        M_card_R_cb->setChecked( opt.card_R() );
         connect( M_card_R_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickcard_R(bool)));
         layout->addWidget( M_card_R_cb );
@@ -183,21 +179,20 @@ SelectDialog::createPlayersDetailControls()
         layout->setSpacing( 0 );
         //
         M_ballRelPos_cb = new QCheckBox( tr( "相对球的距离" ) );
-        M_ballRelPos_cb->setChecked( opt->ballRelPos() );
+        M_ballRelPos_cb->setChecked( opt.ballRelPos() );
         connect( M_ballRelPos_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickballRelPos(bool)));
         layout->addWidget( M_ballRelPos_cb );
-        top_layout->addLayout( layout );
         //
         M_ballRelVel_cb = new QCheckBox( tr( "相对球的方向" ) );
-        M_ballRelVel_cb->setChecked( opt->ballRelVel() );
+        M_ballRelVel_cb->setChecked( opt.ballRelVel() );
         connect( M_ballRelVel_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickballRelVel(bool)));
         layout->addWidget( M_ballRelVel_cb );
-        top_layout->addLayout( layout );
+
         //
         M_states_cb = new QCheckBox( tr( "球员状态" ) );
-        M_states_cb->setChecked( opt->states() );
+        M_states_cb->setChecked( opt.states() );
         connect( M_states_cb, SIGNAL( clicked( bool ) ),
                  this, SLOT( clickstates(bool)));
         layout->addWidget( M_states_cb );
@@ -245,144 +240,144 @@ QWidget * SelectDialog::createteamDetailControls(){
 }
 
 void SelectDialog::clickpos( bool checked ){
-    if ( opt->pos() != checked )
+    if ( opt.pos() != checked )
     {
-        opt->togglepos();
+        opt.togglepos();
         //qDebug("fun");//emit configured();
     }
 }
 void SelectDialog::clickang( bool checked ){
-    if ( opt->ang()!= checked )
+    if ( opt.ang()!= checked )
     {
-        opt->toggleang();
+        opt.toggleang();
         //qDebug("fun");//emit configured();
     }
 }
 void SelectDialog::clickMaxTurn( bool checked ){
-    if ( opt->MaxTurn()!= checked )
+    if ( opt.MaxTurn()!= checked )
     {
-        opt->toggleMaxTurn();
+        opt.toggleMaxTurn();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickLastMove( bool checked ){
-    if ( opt->LastMove()!= checked )
+    if ( opt.LastMove()!= checked )
     {
-        opt->toggleLastMove();
+        opt.toggleLastMove();
         //qDebug("fun");//emit configured();
     }
 
 }
 
 void SelectDialog::clickhead( bool checked ){
-    if ( opt->head()!= checked )
+    if ( opt.head()!= checked )
     {
-        opt->togglehead();
+        opt.togglehead();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clicktackle( bool checked ){
-    if ( opt->tackle()!= checked )
+    if ( opt.tackle()!= checked )
     {
-        opt->toggletackle();
+        opt.toggletackle();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickFoul( bool checked ){
-    if ( opt->Foul()!= checked )
+    if ( opt.Foul()!= checked )
     {
-        opt->toggleFoul();
+        opt.toggleFoul();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickpointto( bool checked ){
-    if ( opt->pointto()!= checked )
+    if ( opt.pointto()!= checked )
     {
-        opt->togglepointto();
+        opt.togglepointto();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickfocus( bool checked ){
-    if ( opt->focus()!= checked )
+    if ( opt.focus()!= checked )
     {
-        opt->togglefocus();
+        opt.togglefocus();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickstamina( bool checked ){
-    if ( opt->stamina()!= checked )
+    if ( opt.stamina()!= checked )
     {
-        opt->togglestamina();
+        opt.togglestamina();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickpower( bool checked ){
-    if ( opt->power()!= checked )
+    if ( opt.power()!= checked )
     {
-        opt->togglepower();
+        opt.togglepower();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickRecovery( bool checked ){
-    if ( opt->Recovery()!= checked )
+    if ( opt.Recovery()!= checked )
     {
-        opt->toggleRecovery();
+        opt.toggleRecovery();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickballRelPos( bool checked ){
-    if ( opt->ballRelPos()!= checked )
+    if ( opt.ballRelPos()!= checked )
     {
-        opt->toggleballRelPos();
+        opt.toggleballRelPos();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickballRelVel( bool checked ){
-    if ( opt->ballRelVel()!= checked )
+    if ( opt.ballRelVel()!= checked )
     {
-        opt->toggleballRelVel();
+        opt.toggleballRelVel();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickstates( bool checked ){
-    if ( opt->states()!= checked )
+    if ( opt.states()!= checked )
     {
-        opt->togglestates();
+        opt.togglestates();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickcard_Y( bool checked ){
-    if ( opt->card_Y()!= checked )
+    if ( opt.card_Y()!= checked )
     {
-        opt->togglecard_Y();
+        opt.togglecard_Y();
         //qDebug("fun");//emit configured();
     }
 
 }
 void SelectDialog::clickcard_R( bool checked ){
-    if ( opt->card_R()!= checked )
+    if ( opt.card_R()!= checked )
     {
-        opt->togglecard_R();
+        opt.togglecard_R();
         //qDebug("fun");//emit configured();
     }
 
 }
     void SelectDialog::clickBody( bool checked ){
-        if ( opt->Body()!= checked )
+        if ( opt.Body()!= checked )
         {
-            opt->toggleBody();
+            opt.toggleBody();
             //qDebug("fun");//emit configured();
         }
 
@@ -397,7 +392,7 @@ void SelectDialog::oncommit(){
 //         i=M_unum_start->currentText().at(1);
 //         j=M_unum_end->currentText().at(1);
     }
-//    opt->setunum(i,j);
+//    opt.setunum(i,j);
 
     QList<QCheckBox *> allCheckboxs= this->findChildren<QCheckBox *>();
     foreach (QCheckBox *b, allCheckboxs) {
@@ -406,6 +401,7 @@ void SelectDialog::oncommit(){
         }
     }
     list->addItem(str);
+    opts->push_back(opt);
     qDebug("成功添加一条挖掘条件");
     this->close();
 }

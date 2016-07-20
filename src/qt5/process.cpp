@@ -6,21 +6,6 @@
 #include <QString>
 #include <QObject>
 
-process::process()
-{
-
-}
-
-//初始化静态变量
-process * process::_instance = 0;
-
-//构建单实例日志对象
-process * process::instance()
-{
-    if(!process::_instance)
-        process::_instance = new process;
-    return process::_instance;
-}
 
 bool process::openRCG( const QString & file_path )
 {
@@ -50,13 +35,122 @@ bool process::openRCG( const QString & file_path )
     return true;
 }
 
-bool process::dataSave(options& opt){
-//    db.creatDB();
-    std::vector< Player >  player;
+bool process::dataSave(){
+    qDebug()<<"运行dataSave()!";
+    std::vector< Player >  players;
     int cycle;
-//    options &opt=options::instance();
-            //creat table
-//    createtable(std::vector<int>,QString,QStringList);
+
+    //拼接字符串      QString Str="INSERT INFO "+temp0+temp1+"VELUES"+temp3;
+//    "
+//    INSERT INFO
+//    sheet1                                 QString temp0;
+//    (item0,item1,item2...)        QString temp1;
+//    VELUES
+//    (value0,value1,...)               QString temp2;
+//    "
+    QString *temp1,*temp2;
+
+    {
+        temp1=new QString;
+        temp1="(";
+        if(opt.stamina())//save staminna
+        {
+            temp1+="stamina,";
+        }
+
+        if(opt.pos())//save pos
+        {
+            temp1+="posx,";
+            temp1+="posy,";
+        }
+
+        if(opt.ang())
+        {
+            temp1+="ang,";
+        }
+
+        if(opt.ballRelPos())
+        {
+            temp1+="ballRelPos,";
+        }
+
+        if(opt.ballRelVel())
+        {
+            temp1+="ballRelVel,";
+        }
+
+        if(opt.card_R())
+        {
+            temp1+="card_Red,";
+        }
+
+        if(opt.card_Y())
+        {
+            temp1+="card_Yellow,";
+        }
+
+        if(opt.focus())
+        {
+            temp1+="focus,";
+        }
+
+        if(opt.Foul())
+        {
+            temp1+="Foul,";
+        }
+
+        if(opt.head())
+        {
+            temp1+="head,";
+        }
+
+        if(opt.Body())
+        {
+            temp1+="body,";
+        }
+
+        if(opt.LastMove())
+        {
+            temp1+="lastmove_x,";
+            temp1+="lastmove_y,";
+        }
+
+        if(opt.MaxTurn())
+        {
+            temp1+="maxturn,";
+        }
+
+        if(opt.pointto())
+        {
+            temp1+="pointto_x,";
+            temp1+="pointto_y,";
+        }
+
+        if(opt.power())
+        {
+            temp1+="power,";
+        }
+
+        if(opt.Recovery())
+        {
+            temp1+="recovery,";
+        }
+
+        if(opt.states())
+        {
+            temp1+="states,";
+        }
+
+        if(opt.tackle())
+        {
+            temp1+="tackle";
+        }
+
+        //save team data
+
+        temp1+=")";
+    }
+
     for(M_main_data.setViewDataCycle(1);
         M_main_data.getCurrentViewData()->cycle() != M_main_data.getViewHolder().latestViewData()->cycle();
         M_main_data.setViewDataStepForward())
@@ -66,116 +160,120 @@ bool process::dataSave(options& opt){
         //save cycle
 
         //save single player data
-        for ( std::vector< Player >::const_iterator p = player.begin();
+
+        for ( std::vector< Player >::const_iterator p = players.begin();
               p != player.end();
-              ++p/*,++i*/){
+              ++p){
+            {
+                temp2=new QString;
+                temp2="(";
+                if(opt.stamina())//save staminna
+                {
+                    p->
+                }
 
-//            if(player->unum())//ex
+                if(opt.pos())//save pos
+                {
+                    double posx,posy;
+
+                }
+
+                if(opt.ang())
+                {
+
+                }
+
+                if(opt.ballRelPos())
+                {
+
+                }
+
+                if(opt.ballRelVel())
+                {
+
+                }
+
+                if(opt.card_R())
+                {
+
+                }
+
+                if(opt.card_Y())
+                {
+
+                }
+
+                if(opt.focus())
+                {
+
+                }
+
+                if(opt.Foul())
+                {
+
+                }
+
+                if(opt.head())
+                {
+
+                }
+
+                if(opt.Body())
+                {
+
+                }
+
+                if(opt.LastMove())
+                {
+
+                }
+
+                if(opt.MaxTurn())
+                {
+
+                }
+
+                if(opt.pointto())
+                {
+
+                }
+
+                if(opt.power())
+                {
+
+                }
+
+                if(opt.Recovery())
+                {
+
+                }
+
+                if(opt.states())
+                {
+
+                }
+
+                if(opt.tackle())
+                {
+
+                }
+
+                //save team data
+
+                temp2+=")";
+            }
+//            if(player->unum())
 //                continue;
-
-            if(opt.stamina())//save staminna
-            {
-
-            }
-
-            if(opt.pos())//save pos
-            {
-                double posx,posy;
-//                posx=player->pos().x;
-
-            }
-
-            if(opt.ang())
-            {
-
-            }
-
-            if(opt.ballRelPos())
-            {
-
-            }
-
-            if(opt.ballRelVel())
-            {
-
-            }
-
-            if(opt.card_R())
-            {
-
-            }
-
-            if(opt.card_Y())
-            {
-
-            }
-
-            if(opt.focus())
-            {
-
-            }
-
-            if(opt.Foul())
-            {
-
-            }
-
-            if(opt.head())
-            {
-
-            }
-
-            if(opt.Body())
-            {
-
-            }
-
-            if(opt.LastMove())
-            {
-
-            }
-
-            if(opt.MaxTurn())
-            {
-
-            }
-
-            if(opt.pointto())
-            {
-
-            }
-
-            if(opt.power())
-            {
-
-            }
-
-            if(opt.Recovery())
-            {
-
-            }
-
-            if(opt.states())
-            {
-
-            }
-
-            if(opt.tackle())
-            {
-
-            }
-
-            //save team data
 
         }
         if(cycle==6000)
         {
             if(opt.score())//save score
             {
-//                if(team="L")
-//                    score = M_main_data.getCurrentViewData()->leftTeam().score();
-//                if(team="R")
-//                    score = M_main_data.getCurrentViewData()->rightTeam().score();
+                //                if(team="L")
+                //                    score = M_main_data.getCurrentViewData()->leftTeam().score();
+                //                if(team="R")
+                //                    score = M_main_data.getCurrentViewData()->rightTeam().score();
 
             }
         }
@@ -194,3 +292,10 @@ bool process::dataSave(options& opt){
     }
 }
 
+bool process::run(){
+    if(!openRCG(File_Path))
+        return false;
+    if(!dataSave())
+        return false;
+    return true;
+}

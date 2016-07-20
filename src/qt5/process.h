@@ -11,15 +11,18 @@ class process:public BaseData
 private:
 //    void calcPT();
 //    void calcShoots();
-
+    QString File_Path;
+    options opt;
     bool openRCG( const QString & file_path );
-    bool dataSave(options& opt);
+    bool dataSave();
 
-
+    process(){}
 public:
-    process();
-    static process *_instance;
-    static process *instance();
+    process(QString &file,options &_opt){
+        File_Path=file;
+        opt=_opt;
+    }
+    bool run();
 
 //    bool run(QString &Game);
 };
