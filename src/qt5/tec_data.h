@@ -1,7 +1,6 @@
 #ifndef TEC_DATA_H
 #define TEC_DATA_H
 #include <map>
-#include "basedata.h"
 
 class Tec_Single_Data{
 private:
@@ -66,7 +65,7 @@ public:
         M_L_Shoots=0;//L射门数
         M_R_Shoots=0;//R射门数
     }
-    ~Tec_Data();
+    ~Tec_Data(){}
 
     std::map<int,Tec_Single_Data> & Tec_LTeam (){
         return LTeam;

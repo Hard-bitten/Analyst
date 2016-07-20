@@ -1,11 +1,13 @@
+
 TEMPLATE = lib
 TARGET = rcsc
 DESTDIR = ../lib
+
 DEPENDPATH += . geom gz monitor param rcg
 INCLUDEPATH += . .. ../boost ../zlib/include
 #LIBS += -L../zlib -lz
-LIBS += ../zlib/zlib1.dll
-DEFINES += HAVE_LIBZ HAVE_WINDOWS_H
+#LIBS += ../zlib/zlib1.dll
+DEFINES += HAVE_LIBZ HAVE_NETINET_IN_H
 DEFINES += TRILIBRARY REDUCED CDT_ONLY NO_TIMER VOID=int REAL=double
 CONFIG += staticlib warn_on release
 
@@ -84,7 +86,8 @@ SOURCES += common/player_param.cpp \
            geom/triangle_2d.cpp \
            geom/triangulation.cpp \
            geom/vector_2d.cpp \
-           geom/voronoi_diagram.cpp \
+           geom/voronoi_diagram_original.cpp \
+           geom/voronoi_diagram_triangle.cpp \
            gz/gzfstream.cpp \
            monitor/monitor_command.cpp \
            trainer/trainer_command.cpp \

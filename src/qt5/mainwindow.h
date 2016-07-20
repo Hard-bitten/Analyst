@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QQueue>
 #include "tec_data.h"
 #include "basedata.h"
 #include "process.h"
+#include "db.h"
 namespace Ui {
 class MainWindow;
 }
@@ -30,9 +32,13 @@ private slots:
 
     void on_player_param_triggered();
 
+    void on_pushButton_clicked();
+
 private:
-    process Pro;
+//    process Pro;
+    QQueue<process> *Pro;
     QString workfile;
+    Rcsdb *db;
 
     bool open_dir();
     bool open_single();

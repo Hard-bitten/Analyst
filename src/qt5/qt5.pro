@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT += network core gui
+QT +=  core gui
+QT+= sql
 # QT += opengl
 #QT       +=
 TEMPLATE = app
@@ -33,6 +34,7 @@ macx {
 
 LIBS += -L../../lib
 LIBS += -lanalyst_model
+
 win32 {
   LIBS += -lrcsc ../../zlib/zlib1.dll -lwsock32
 }
@@ -68,12 +70,21 @@ QMAKE_CXXFLAGS += -static
 SOURCES += main.cpp\
         mainwindow.cpp \
     logger.cpp \
-    process.cpp
+    process.cpp \
+    db.cpp \
+    options.cpp \
+    select_dialog.cpp \
+    namedialog.cpp
 
 HEADERS  += mainwindow.h \
     tec_data.h \
     basedata.h \
     logger.h \
-    process.h
+    process.h \
+    db.h \
+    options.h \
+    select_dialog.h \
+    namedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    namedialog.ui

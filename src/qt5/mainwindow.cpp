@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "logger.h"
+#include "select_dialog.h"
+#include "namedialog.h"
 #include <QLabel>
 #include <QMenu>
 #include <QFile>
@@ -10,6 +12,7 @@
 #include <QListWidgetItem>
 #include <QString>
 #include <QDir>
+#include <QDateTime>
 #include <cmath>
 
 //UNIT TEST
@@ -55,6 +58,7 @@ bool MainWindow::open_single(){
         QListWidgetItem *temp=new QListWidgetItem(workfile);
         ui->tasklist->addItem(temp);
         temp->setCheckState(Qt::Checked);
+
         qDebug()<<"成功导入1个RCG文件!";
         //        Pro.run(M_tec_Data);
         return true;
@@ -82,7 +86,16 @@ bool MainWindow::open_dir(){
             ui->tasklist->addItem(temp);
             temp->setCheckState(Qt::Checked);
         }
+
         qDebug()<<"成功导入"<<n<<"个文件";
+        NameDialog *dbname=new NameDialog;
+        dbname->exec();
+        QString name=dbname->getname();
+        name+=".db";
+        delete dbname;
+        qDebug()<<name;
+        db=new Rcsdb;
+        db->creatDB(name);
         return true;
     }
     else
@@ -141,8 +154,8 @@ void MainWindow::on_run_clicked()
     QString temp;
     for(int i=0;i<ui->tasklist->count();i++){
         temp=ui->tasklist->item(i)->text();
-//        qDebug()<<temp;
-        Pro.run(temp);
+        //        qDebug()<<temp;
+        //        Pro.run(temp);
     }
 }
 
@@ -152,11 +165,18 @@ void MainWindow::S_disLog(const QString & msg)
     ui->plainTextEdit->appendPlainText(msg);
 }
 
-
-
 void MainWindow::on_player_param_triggered()
 {
     QString name=("球员参数");
     QLabel *lable = new QLabel("球员参数!");
     new_tab(name,lable);
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    process newpro=new process;
+    SelectDialog *M_Select_Dialog=new SelectDialog(ui->objlist,pro);
+    M_Select_Dialog->show();
+    Pro->push_back(newpro);
+}
+
