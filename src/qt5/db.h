@@ -29,7 +29,7 @@ public:
     bool update(int unum,QString item,int value);
     bool update(int unum,QString item,double value);
 
-    bool insert(int &unum,QMap<QString item,QString value> *list);
+    bool insert(int unum,QString item,QString value);
     bool insert(int unum,QString item,int value);
     bool insert(int unum,QString item,double value);
 };

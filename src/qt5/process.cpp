@@ -48,11 +48,11 @@ bool process::dataSave(){
 //    VELUES
 //    (value0,value1,...)               QString temp2;
 //    "
-    QString *temp1,*temp2;
+    QString temp1,temp2;
 
     {
-        temp1=new QString;
-        temp1="(";
+//        temp1=new QString;
+        temp1+="(";
         if(opt.stamina())//save staminna
         {
             temp1+="stamina,";
@@ -74,10 +74,6 @@ bool process::dataSave(){
             temp1+="ballRelPos,";
         }
 
-        if(opt.ballRelVel())
-        {
-            temp1+="ballRelVel,";
-        }
 
         if(opt.card_R())
         {
@@ -155,26 +151,26 @@ bool process::dataSave(){
         M_main_data.getCurrentViewData()->cycle() != M_main_data.getViewHolder().latestViewData()->cycle();
         M_main_data.setViewDataStepForward())
     {
-        player=M_main_data.getCurrentViewData()->players();
+        players=M_main_data.getCurrentViewData()->players();
         cycle=M_main_data.getCurrentViewData()->cycle();
         //save cycle
 
         //save single player data
-
+        temp2="";
         for ( std::vector< Player >::const_iterator p = players.begin();
-              p != player.end();
+              p != players.end();
               ++p){
             {
-                temp2=new QString;
+//                temp2=new QString;
                 temp2="(";
                 if(opt.stamina())//save staminna
                 {
-                    p->
+
                 }
 
                 if(opt.pos())//save pos
                 {
-                    double posx,posy;
+//                    double posx,posy;
 
                 }
 
@@ -188,10 +184,6 @@ bool process::dataSave(){
 
                 }
 
-                if(opt.ballRelVel())
-                {
-
-                }
 
                 if(opt.card_R())
                 {
@@ -290,6 +282,7 @@ bool process::dataSave(){
             }
         }
     }
+    return true;
 }
 
 bool process::run(){
